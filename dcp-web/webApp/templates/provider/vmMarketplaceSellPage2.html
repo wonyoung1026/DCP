@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Virtual Machines >  Marketplace > Sell</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+
+    {% include "includes/providerSidebar.html" %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        {% include "includes/topbar.html" %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Virtual Machines >  Marketplace > Sell</h1>
+          </div>
+          <div class="card shadow mb-4" id="instance-detail-card">
+            <!-- <div class="card-header py-3">
+              <div class="tab">
+                <button class="tablinks m-0 font-weight-bold text-primary" onclick="openCity(event,'menu1')" id="defaultOpen">Instance Information</button>
+                <button class="tablinks m-0 font-weight-bold text-primary" onclick="openCity(event,'menu2'); load_home()">Full Information Details</button>
+              </div>
+            </div> -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Instance Detail</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getFullInstanceDetail()">Full Instance Detail</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body" id="instance-detail" vm-id="{{vm.id}}">
+              <div id="menu1" class="tabcontent">
+                <div class="row">
+                  <span class="col-md-2 instance-detail-key">Provider Email</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-provider-email">
+                    {{vm.providerEmail if vm.providerEmail}}
+                  </span>
+                  <span class="col-md-2 instance-detail-key">Processor</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-processor">
+                    {% for item in vm.processor %}
+                      {{item}}
+                    <br/>
+                    {% endfor %}
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="col-md-2 instance-detail-key">Disk</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-disk">
+                    {% for item in vm.disk %}
+                      {{item}}
+                    <br/>
+                    {% endfor %}
+                  </span>
+                  <span class="col-md-2 instance-detail-key">Memory</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-memory">
+                    {% for item in vm.memory %}
+                      {{item}}
+                    <br/>
+                    {% endfor %}
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="col-md-2 instance-detail-key">GPU</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-gpu">
+                    {% for item in vm.gpu %}
+                      <div class="row">
+                        <div style="width:50%;">
+                          processor : {{item.processor}}
+                          <br>
+                          uuid : {{item.uuid}}
+                          <br>
+                        </div>
+                        <div style="width:50%;">
+                          {% if item.price is defined and item.price|int >= 0 %}
+                          <input class="col-md-4 instance-detail-value" gpu-id="{{item.id}}" name="gpu-sell-price" value= {{item.price}} placeholder="Input in Hong Kong Dollar"></input>
+                          {% else %}
+                          <input class="col-md-4 instance-detail-value" gpu-id="{{item.id}}" name="gpu-sell-price" placeholder="Input in Hong Kong Dollar"></input>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <br>
+                    {% endfor %}
+                  </span>
+                  <span class="col-md-2 instance-detail-key">Listed Time</span>
+                  <span class="col-md-4 instance-detail-value" id="instance-detail-registered-time">
+                    {{vm.createdOn if vm.createdOn}}
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="col-md-2 instance-detail-key">Price</span>
+                  {% if vm.price is defined and vm.price|int >= 0 %}
+                  <input class="col-md-4 instance-detail-value" id="instance-sell-price" value={{vm.price}} placeholder="Input in Hong Kong Dollar"></input>
+                  {% else %}
+                  <input class="col-md-4 instance-detail-value" id="instance-sell-price" placeholder="Input in Hong Kong Dollar"></input>
+                  {% endif %}
+                  <span class="col-md-9"></span>
+                  <span class="col-md-3">
+                    <a href="#" data-toggle="modal" data-target="#confirmModal" class=" btn btn-primary">
+                      <span class="text">Confirm</span>
+                    </a>
+                    <a href="#" onClick="history.go(-1); return false;" class=" btn btn-secondary">
+                      <span class="text">Back</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div id = "menu2" class = "tabcontent">
+                <div id="loglog">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4" id="full-instance-detail-card" style="display:none;">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Full Instance Detail</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getInstanceDetail()">Instance Detail</a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Card Body -->
+            <div class="card-body" id="full-instance-detail-err"></div>
+            <div class="card-body" id="full-instance-detail" style="display:none;">
+
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      <!-- Confirm Modal-->
+      <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Purchase Virtual Machine</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body" id="sell-vm-modal-body">You cannot undo this action once you confirm. <br><br>
+              Please check the details before you proceed. <br>
+              Press "Confirm" to proceed.</div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" href="#" onclick="sellVM()">Confirm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include "includes/footer.html" %}
+
+  
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src= "/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+  
+  
+    <script src= "/js/firebase/init.js"></script>
+    <script src= "/js/provider/vm-sell.js"></script>
+    
+</body>
+
+</html>

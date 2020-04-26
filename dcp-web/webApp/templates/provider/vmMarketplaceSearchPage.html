@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Instances >  Marketplace > Search</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+  <!-- Custom styles for this page -->
+  <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+
+    {% include "includes/providerSidebar.html" %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        {% include "includes/topbar.html" %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Instances >  Marketplace > Search</h1>
+          </div>
+          <!-- DataTables Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Instances on Marketplace</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Provider Email</th>
+                      <th>Processor</th>
+                      <th>No. of Cores</th>
+                      <th>Memory</th>
+                      <th>Disk</th>
+                      <th>GPU</th>
+                      <th>Price(HKD/hr)</th>
+                      <th>Registered time</th>
+                      <th>No. of Disconnections</th>
+                    </tr>
+                  </thead>
+                  <tbody id="vm-table">
+                    {% for vm in vm_list %}
+                    <tr class="table-row clickable" vm-id={{vm.id}} data-href="#">
+                      <td>{{vm.providerEmail if vm.providerEmail}}</td>
+                      <td>{{vm.processor[0] if vm.processor[0] is defined}}</td>
+                      <td>{{vm.processor|length if vm.processor is defined}}</td>
+                      <td>{{vm.memory[0] if vm.memory[0] is defined}}</td>
+                      <td>{{vm.disk[0] if vm.disk[0] is defined}}</td>
+                      <td>{{vm.gpu[0].processor if vm.gpu[0] is defined}}</td>
+                      <td>{{vm.price if vm.price is defined}}</td>
+                      <td>{{vm.createdOn if vm.createdOn is defined}}</td>
+                      <td>{{vm.numberOfDisconnections if vm.numberOfDisconnections is defined}}</td>
+                    </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instance Detail -->
+          <div class="card shadow mb-4" id="instance-detail-card">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Instance Detail</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getFullInstanceDetail()">Full Instance Detail</a>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getMonitoring()">Monitoring</a>
+                </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body" id="instance-detail-err">
+            </div>
+            <div class="card-body" id="instance-detail" style="display:none;">
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Instance ID</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-instance-id"></span>
+                <span class="col-md-2 instance-detail-key">Provider Email</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-provider-email"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Price (HKD/hr)</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-price"></span>                
+                <span class="col-md-2 instance-detail-key">Status</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-status">
+                </span>
+              </div>
+              <br>
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Processor</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-processor"></span>
+                <span class="col-md-2 instance-detail-key">Number of cores</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-core"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Memory</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-memory"></span>
+                <span class="col-md-2 instance-detail-key">Disk</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-disk"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">GPU</span>
+              </div>
+              <div class="row" id="instance-detail-gpu">
+              </div>
+              <br>
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Registered Time</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-registered-time"></span>
+                <span class="col-md-2 instance-detail-key">Number of Disconnection</span>
+                <span class="col-md-4 instance-detail-value" id="instance-detail-disconnection"></span>
+              </div>
+              <br>
+              <div class="row">
+                <span class="col-md-10"></span>
+                <span class="col-md-2">
+                  <a href="#" data-toggle="modal" data-target="#deleteFromMyListModal" class=" btn btn-danger" id="delete-favorite-btn"><span class="text">Delete From My List</span></a>
+                  <a href="#" data-toggle="modal" data-target="#addToMyListModal" class=" btn btn-primary" id="add-favorite-btn" onclick="addToFavorites()"><span class="text">Add To My List</span></a>
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          
+          <!-- Full Instance Detail -->
+          <div class="card shadow mb-4" id="full-instance-detail-card" style="display:none;">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Full Instance Detail</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getInstanceDetail()">Instance Detail</a>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getMonitoring()">Monitoring</a>
+                </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body" id="full-instance-detail-err">
+              
+            </div>
+            <div class="card-body" id="full-instance-detail" style="display:none;">
+              
+            </div>
+          </div>
+
+
+          <!-- Monitoring -->
+          <div class="card shadow mb-4" id="monitoring-card" style="display:none;">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Monitoring</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getInstanceDetail()">Instance Detail</a>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getFullInstanceDetail()">Full Instance Detail</a>
+                </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body" id="monitoring-err" style="display:none;">
+            </div>
+            <div class="card-body" id="monitoring">
+              <iframe id="monitoring-iframe" src="" style="width:100%; height:500px; pointer-events:none;"></iframe>
+            </div>
+          </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      
+      {% include "includes/providerMarketplaceModals.html" %}
+      {% include "includes/footer.html" %}
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src= "/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+  
+  
+    <script src= "/js/firebase/init.js"></script>
+    
+    <!-- Page level plugins -->
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    
+    <!-- data table & button scripts -->
+    <script src= "/js/marketplace-vm-table.js"></script>
+    
+    
+    <!-- Page level plugins -->
+    <script src="/vendor/chart.js/Chart.min.js"></script>
+    
+    <!-- DCP chart js -->
+    <script src= "/js/chart.js"></script>    
+    <!-- Monitoring chart js -->
+    <script src= "/js/vm-monitoring.js"></script>
+
+    
+</body>
+
+</html>

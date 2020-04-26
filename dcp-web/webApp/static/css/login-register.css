@@ -1,0 +1,34 @@
+.login-register-form-header{
+    text-align: center;
+	color: #00415d;
+	background-color: #fff;
+	border-color: #fff;
+	text-align:center;    
+}
+
+
+
+.login-register-form-header a{
+    text-decoration: none;
+	color: #666;
+	font-weight: bold;
+	font-size: 15px;
+	-webkit-transition: all 0.1s linear;
+	-moz-transition: all 0.1s linear;
+	transition: all 0.1s linear;
+}
+.login-register-form-header input{
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    font-size: 15px;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+    border: 0px none;
+}
+
+.login-register-form-header a.active{
+	color: #4e73df;
+	font-size: 18px;
+}

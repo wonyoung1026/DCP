@@ -1,0 +1,74 @@
+     <!-- Start Modal-->
+     <div class="modal fade" id="startModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Start Container</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body funkyradio" id="select-gpu-modal-body">
+            </div>
+            <div class="modal-footer">
+              <a class="btn btn-secondary" href="#" data-dismiss="modal" onclick="startContainer()">Confirm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+      <!-- Stop Modal-->
+     <div class="modal fade" id="stopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Stop Container</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              GPU and CPU usage fee will NOT incur when the container is stopped.
+              <br>
+              <br>
+              <strong>NOTE: The provider can terminate the host machine when there is no container running in the host machine, and data will be LOST.<br></strong>
+              <br>
+              Please terminate your container to keep you image stored on DCP server and removed from the host machine.
+              <br>
+              <br>
+              Press "Confirm" button to proceed.
+              <br>
+            </div>
+            <div class="modal-footer">
+              <a class="btn btn-secondary" href="#" data-dismiss="modal" onclick="stopContainer()">Confirm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Termiate Modal-->
+      <div class="modal fade" id="terminateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Terminate Container</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Please press "Save" IF you want to keep the image of this container
+              <br>
+              <br>
+              Please press "Terminate" IF you want to remove all related data and connection (e.g. system monitoring connection)
+              <br>
+              <strong>You CANNOT undo this action. </strong>
+              <br>
+            </div>
+            <div class="modal-footer">
+              <!-- <a class="btn btn-secondary" href="#" data-dismiss="modal" >Save</a> -->
+              <a class="btn btn-danger" href="#" data-dismiss="modal" onclick="terminateContainer()">Don't Save</a>
+            </div>
+          </div>
+        </div>
+      </div>

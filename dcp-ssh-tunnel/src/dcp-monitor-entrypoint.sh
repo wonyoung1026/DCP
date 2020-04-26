@@ -1,0 +1,6 @@
+#! /bin/bash
+
+KEY_PATH=$DCP_KEY_PATH/$DCP_KEY_NAME
+ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DESTINATION_USER@$DESTINATION_IP << EOF
+docker stats $DESTINATION_CONTAINER_NAME
+EOF

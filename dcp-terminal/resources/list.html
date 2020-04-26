@@ -1,0 +1,70 @@
+{{- $ctl := .control -}} {{- $showLocation := .loc -}} {{- $share := .share -}}
+<!doctype html>
+<html>
+
+<head>
+  <title>{{ .title }}</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/css/list.css" />
+</head>
+
+<body>
+  <div class="table ver3 m-b-110">
+    <div class="table-head">
+      <table>
+        <thead>
+          <tr>
+            <th class="column1">Container ID</th>
+            <th class="column2">Image</th>
+            <th class="column3">Command</th>
+            <th class="column4">Name</th>
+            <th class="column5">IP</th>
+            {{- if $showLocation }}
+            <th class="column6">Location</th>
+            {{- end }}
+            <th class="column7">Status</th>
+            {{- if $ctl.Enable }}
+            <th class="column8">Actions</th>
+            {{- end -}}
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <div class="table-body">
+      <table>
+        <tbody>
+          {{ range $i, $e := .containers }}
+          <tr {{ if (eq (mod $i 2) 1) -}}class="t c ver2"{{- end }}>
+            <td class="column1" title="exec into container">
+              <a href="/e/{{ printf "%.12s" .ID }}" value="{{ .ID }}" target="_blank">{{ printf "%.12s" .ID }}</a>
+            </td>
+            <td class="column2" title="{{ .Image }}">{{ printf .Image }}</td>
+            <td class="column3" title="{{ .Command }}">{{ printf .Command }}</td>
+            <td class="column4" title="{{ .Name }}">
+              <a href="/logs/{{ printf "%.12s" .ID }}?follow=1&tail=10" target="_blank" title="get logs">{{ printf .Name }}</a>
+            </td>
+            <td class="column5" title="{{ .IPs }}">{{ index .IPs 0 }}</td>
+            {{- if $showLocation -}}
+            <td class="column6" title="{{ .LocServer }}">{{ printf .LocServer }}</td>
+            {{- end -}}
+            <td class="column7" title="{{ .State }}">{{ .Status }}</td>
+            {{ if $ctl.Enable -}}
+            <td class="column8">
+              {{ if or $ctl.Start $ctl.All }}
+              <button title="start">Start</button>{{ end }} {{ if or $ctl.Stop $ctl.All }}
+              <button title="stop">Stop</button>{{ end }} {{ if or $ctl.Restart $ctl.All}}
+              <button title="restart">Restart</button>{{ end }}
+            </td>
+            {{ end -}}
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="/js/control.js"></script>
+</body>
+
+</html>

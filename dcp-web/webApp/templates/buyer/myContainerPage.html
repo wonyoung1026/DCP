@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Instances >  My Instances > Container</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this page -->
+  <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+
+    {% include "includes/buyerSidebar.html" %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        {% include "includes/topbar.html" %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Instances >  My Instances > Container</h1>
+          </div>
+          <!-- DataTables Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">My Containers</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Provider Email</th>
+                      <th>Processor</th>
+                      <th>GPU</th>
+                      <th>Status</th>
+                      <th>Created time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="container-table">
+                    {% for container in container_list %}
+                    <tr class="table-row clickable" container-id={{container.id}} data-href="#">
+                      <td>{{container.name if container.name}}</td>
+                      <td>{{container.providerEmail if container.providerEmail}}</td>
+                      <td>{{container.processor if container.processor}}</td>
+                      <td>{{container.gpu if container.gpu}}</td>
+                      <td>{{container.stringStatus if container.stringStatus}}</td>
+                      <td>{{container.createdOn if container.createdOn}}</td>
+                    </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Instance Detail -->
+          <div class="card shadow mb-4" id="instance-detail-card">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Instance Detail</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getMonitoring()">Monitoring</a>
+                </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body" id="instance-detail-err">
+            </div>
+            <div class="card-body" id="instance-detail" style="display:none;">
+              <!-- Container info -->
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Container</span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Container ID</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-container-id"></span>
+                <span class="col-md-2 instance-detail-inner-key">Name</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-container-name"></span>
+                <input class="col-md-4 instance-detail-inner-value" id="instance-detail-container-name-input" style="display:none;"></input>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Status</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-container-status"></span>
+                <span class="col-md-2 instance-detail-inner-key">Due spendings (Current cost rate)</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-container-spendings"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Created Time</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-container-created-time"></span>
+              </div>
+              <br>
+
+              <!-- Image info -->
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Base Image</span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Name</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-image-name"></span>
+                <span class="col-md-2 instance-detail-inner-key">Description</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-image-description"></span>
+              </div>
+              <br>
+
+              <!-- Provider host info -->
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">Provider host</span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Provider host ID</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-id"></span>
+                <span class="col-md-2 instance-detail-inner-key">Provider email</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-provider-email"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Price (per hour)</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-price"></span>
+                <span class="col-md-2 instance-detail-inner-key">Status</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-status"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Processor</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-processor"></span>
+                <span class="col-md-2 instance-detail-inner-key">Number of cores</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-core"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Memory</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-memory"></span>
+                <span class="col-md-2 instance-detail-inner-key">Disk</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-disk"></span>
+              </div>
+              <div class="row">
+                <span class="col-md-2 instance-detail-inner-key">Registered Time</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-registered-time"></span>
+                <span class="col-md-2 instance-detail-inner-key">Number of Disconnection</span>
+                <span class="col-md-4 instance-detail-inner-value" id="instance-detail-vm-disconnection"></span>
+              </div>
+              <br>
+              <!-- GPU info -->
+              <div class="row">
+                <span class="col-md-2 instance-detail-key">GPU</span>
+                <span class="col-md-4 instance-detail-value"></span>
+              </div>
+              <div class="row" id="instance-detail-gpu">
+              </div>
+              <br>
+
+              <!-- Buttons -->
+              <div class="row">
+                <span class="col-md-7"></span>
+                
+                <span class="col-md-5" id="btn-col">
+                  <a href="#" data-toggle="modal" onclick="modify()" class="btn btn-secondary">
+                    <span class="text">Modify</span>
+                  </a>
+                  <a href="#" data-toggle="modal" data-target="#stopModal" class="btn btn-secondary" id="stop-btn" style="display:none;">
+                    <span class="text">Stop</span>
+                  </a>
+                  <a href="#" data-toggle="modal" data-target="#startModal" class="btn btn-secondary" id="start-btn" onclick="getGPUModal()" style="display:none;">
+                    <span class="text">Start</span>
+                  </a>
+                  <a href="#" data-toggle="modal" data-target="#terminateModal" class="btn btn-danger" id="terminate-btn">
+                    <span class="text">Terminate</span>
+                  </a>
+                  <a href="#" data-toggle="modal" class="btn btn-primary" id="launch-shell-btn" onclick="launchContainerShell()" >
+                    <span class="text">Launch DCP Shell</span>
+                  </a>
+                </span>
+                <span class="col-md-5" id="modify-btn-col" style="display:none;">
+                  <a href="javascript:void(0);" class="btn btn-secondary" onclick="modifyClose(); return false;">
+                    <span class="text">Close</span>
+                  </a>
+                  <a href="javascript:void(0);" class="btn btn-primary" onclick="modifyConfirm(); return false;">
+                    <span class="text">Confirm</span>
+                  </a>
+                </span>
+
+                <!-- <span class="col-md-2">
+                </span>
+                <span class="col-md-1">
+                </span> -->
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Monitoring -->
+          <div class="card shadow mb-4" id="monitoring-card" style="display:none;">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Monitoring</h6>
+              <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Options:</div>
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="getInstanceDetail()">Instance Detail</a>
+                </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body" id="monitoring-err" style="display:none;">
+            </div>
+            <div class="card-body" id="monitoring">
+              <iframe id="monitoring-iframe" src="" style="width:100%; height:500px; pointer-events:none;"></iframe>
+
+            </div>
+          </div>
+
+
+
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+ 
+      {% include "includes/buyerContainerModals.html" %}
+      {% include "includes/footer.html" %}
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src= "/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+  
+  
+    <script src= "/js/firebase/init.js"></script>
+  
+    <!-- Page level plugins -->
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    
+    <!-- data table & button scripts -->
+    <script src= "/js/buyer/container-table.js"></script>
+    
+
+    <!-- Page level plugins -->
+    <script src="/vendor/chart.js/Chart.min.js"></script>
+    
+    <!-- DCP chart js -->
+    <script src= "/js/chart.js"></script>
+
+</body>
+
+</html>

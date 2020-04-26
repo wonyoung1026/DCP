@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Buyer Console</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <!-- Load dashboard earnings chart data  -->
+  <meta id="dashboard-chart-data" data-xy='{{dashboard_data.chart_data|tojson|safe}}'>
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include "includes/buyerSidebar.html" %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        {% include "includes/topbar.html" %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+  
+            <!-- Remaining credits Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Credit</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">HKD {{dashboard_data.credit}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-credit-card fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Spending (Monthly) Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Spendings (Monthly)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">HKD {{dashboard_data.monthly_spendings}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spending (Annual) Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Spendings (Annual)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">HKD {{dashboard_data.annual_spendings}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Notifications Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Notifications</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{dashboard_data.notification}}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-bell fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-6">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Spendings Overview</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="dashboard-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instances Overview Card -->
+            <div class="col-xl-4 col-lg-6">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Instances Overview</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="row">
+                    <br>
+                    <br>
+                    <div class="col-md-6">
+                      <span class="btn btn-success btn-icon-split btn-lg"  style="width:100%; justify-content: normal;">
+                        <span class="icon text-white-50">
+                          {{dashboard_data.instance_overview.running}}
+                        </span>
+                        <span class="text">Running</span>
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="btn btn-primary btn-icon-split btn-lg" style="width:100%; justify-content: normal;">
+                        <span class="icon text-white-50">
+                          {{dashboard_data.instance_overview.pending}}
+                        </span>
+                        <span class="text">Pending</span>
+                      </span>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class= "row">
+                    <div class="col-md-6">
+                      <span class="btn btn-warning btn-icon-split btn-lg" style="width:100%; justify-content: normal;">
+                        <span class="icon text-white-50">
+                          {{dashboard_data.instance_overview.unstable}}
+                        </span>
+                        <span class="text">Unstable</span>
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="btn btn-danger btn-icon-split btn-lg" style="width:100%; justify-content: normal;">
+                        <span class="icon text-white-50">
+                          {{dashboard_data.instance_overview.disconnected}}
+                        </span>
+                        <span class="text">Disconnected</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      
+      {% include "includes/footer.html" %}
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src= "/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+
+  <!-- Page level plugins -->
+  <script src="/vendor/chart.js/Chart.min.js"></script>
+  
+  <!-- Page level custom scripts -->
+  <script src="/js/demo/chart-area-demo.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+  
+  
+    <script src= "/js/firebase/init.js"></script>
+    <!-- DCP chart js -->
+    <script src= "/js/chart.js"></script>
+    <!-- Provider dashboard js -->
+    <script src= "/js/buyer/dashboard.js"></script>
+
+</body>
+
+</html>

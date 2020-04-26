@@ -1,0 +1,142 @@
+      <!-- Purchase Modal-->
+      <div class="modal fade" id="purchaseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Purchase Virtual Machine</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">You currently have ${{user.credit}} credits remaining. <br>
+              Press "Confirm" to proceed.</div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" href="#" id="final-purchase-btn">Confirm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Delete from my list Modal-->
+      <div class="modal fade" id="deleteFromMyListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add To My List</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">Do you really want to delete the selected instance from your list?</div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-danger" href="#" data-dismiss="modal" onclick="deleteFromFavorites();">Delete</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Add to my list Modal-->
+      <div class="modal fade" id="addToMyListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add To My List</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body" id="add-to-list-modal-body">Selected instance have been added to your list!</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Image selection modal -->
+      <div class="modal fade" id="selectBaseImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Choose Base Image</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="dropdown mb-4">
+                <span id="err-select-base-image-modal" style="color:red;"></span>
+                <br>
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Select a base image
+                </button>
+                <div id="base-image-modal-dropdown" class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="width:100%;">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" id="get-select-gpu-modal-button" href="javascript:void(0);" onclick="getGPUModal()">Next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Select GPU modal-->
+      <div class="modal fade" id="selectGPUModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Select GPU (Optional)</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body funkyradio" id="select-gpu-modal-body">
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#selectBaseImageModal" data-dismiss="modal">Back</button>
+              <a class="btn btn-primary" data-target="#confirmPriceModal" data-dismiss="modal" data-toggle="modal" href="javascript:void(0);" onclick="getConfirmPurchaseModal()">Next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm price modal-->
+      <div class="modal fade" id="confirmPriceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Confirm Price</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body" id="confirm-price-list">
+
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-target="#selectGPUModal" data-dismiss="modal" data-toggle="modal">Back</button>
+              <a class="btn btn-primary" data-target="#finalConfirmationModal" data-dismiss="modal" data-toggle="modal" href="javascript:void(0);" onclick="confirmPurchase()">Confirm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- final confirm modal-->
+      <div class="modal fade" id="finalConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="final-confirmation-modal-title">Confirm Purchase</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body" id="final-confirmation-modal-body">
+              
+            </div>
+          </div>
+        </div>
+      </div>
