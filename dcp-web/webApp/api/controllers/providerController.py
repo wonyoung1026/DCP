@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from ..models import virtualMachineModel, gpuModel, vmTransactionModel, gpuTransactionModel, containerModel, gpuMetricModel
+from ..models import virtualMachineModel, gpuModel, vmTransactionModel, gpuTransactionModel, containerModel, gpuMetricModel, favoriteModel
 from . import authController, helper
 import os
 import requests
@@ -386,10 +386,13 @@ def terminateMyVM(vm_id):
     # 2. Delete VM
     # ---------------------------------------------------------------
     
+    favorites = favoriteModel.Favorite().getByQuery([("virtualMachineID", "==", vm.id), ("userID", "==", provider.id)])
+    favorites[0].remove()
+
     for gpu_id in vm.gpuIDs:
         gpu = gpuModel.GPU(id=gpu_id)
         gpu.remove()
-        
+    
     vm.remove()
 
     return {'message': "Virtual machines terminated", "status": 203}

@@ -78,7 +78,7 @@ def getStartContainer(container_id):
     ip_address = request.get_json().get("ipAddress")
     gpu_ids = request.get_json().get("gpuIDs")
     
-    # TODO: Start container on provider side
+    # Start container on provider side
     try:
         command_list = [
             "sudo docker start --restart always {cname} && \
@@ -111,7 +111,7 @@ def getStartContainer(container_id):
 def getStopContainer(container_id):
     ip_address = request.get_json().get("ipAddress")
 
-    # TODO: Stop container (+ detach GPU) on provider side
+    # Stop container (+ detach GPU) on provider side
     try:
         command_list = [
             "sudo docker stop {}".format(str(container_id))
@@ -135,9 +135,6 @@ def getStopContainer(container_id):
     
 
     return make_response(jsonify({"output": container_id, "message":"Container stop success"}),200)
-
-
-
 
 # ====================================================================
 # Terminate container WITHOUT save

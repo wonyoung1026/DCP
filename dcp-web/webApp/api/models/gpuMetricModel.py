@@ -1,6 +1,6 @@
 from . import *
 
-COLLECTION_NAME = "gpuMetric"
+COLLECTION_NAME = "GPUMetric"
 
 
 class GPUMetric(BaseModel):

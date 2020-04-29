@@ -1,6 +1,6 @@
 from . import *
 
-COLLECTION_NAME = "vmMetric"
+COLLECTION_NAME = "VMMetric"
 
 
 class VMMetric(BaseModel):

@@ -438,6 +438,9 @@ function modifyIP(){
 function terminateVM(){
     var vmID = document.getElementById("instance-detail").getAttribute("vm-id");
 
+    var terminateBtnElement = document.getElementById("terminate-btn");
+    terminateBtnElement.getElementsByTagName("span")[0].innerHTML = "Terminating..."
+
     var url = "/provider/vm/"+vmID;
     var http = new XMLHttpRequest();
     http.open('DELETE', url, true);
@@ -452,6 +455,8 @@ function terminateVM(){
                     window.location.reload(true);
                     break;
                 default:
+                    terminateBtnElement.getElementsByTagName("span")[0].innerHTML = "Terminate"
+                    terminateBtnElement.classList.remove("btn-light");
                     break;
             }
         }

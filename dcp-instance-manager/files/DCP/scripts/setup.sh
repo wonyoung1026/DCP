@@ -76,7 +76,7 @@ sudo usermod -aG docker $(whoami)
 sudo service docker restart
 
 # get centos:7 image (More to be added in the future)
-sudo docker pull wonyoung1026/dcp-base-centos
+# sudo docker pull wonyoung1026/dcp-base-centos
 
 
 # Create log file for DCP cron jobs 

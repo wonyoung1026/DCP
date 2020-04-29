@@ -19,6 +19,11 @@ function getMonitoring(){
     http.send()
 }
 
+function getInstanceDetail(){
+    // Hide other cards and display Full Instance Detail Card
+    document.getElementById("instance-detail-card").style.display = "block";
+    document.getElementById("monitoring-card").style.display = "none";
+}
 
 
 function addContainerTableRowHandlers(){

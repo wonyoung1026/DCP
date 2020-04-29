@@ -204,7 +204,6 @@ def postTerminateMyContainerWithoutSave(container_id):
     # ---------------------------------------------------------------    
     containerModel.Container(id=container.id).remove()
 
-
     return {"message": 'Container delete without save success', "status": 201}
 
 # ===============================================================

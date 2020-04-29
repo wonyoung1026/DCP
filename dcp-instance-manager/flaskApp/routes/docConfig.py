@@ -21,6 +21,7 @@ def stopContainer(container_id):
 @instanceApp.route('/container/<string:container_id>/terminate')
 def terminateContainerWithoutSave(container_id):
     return docConfigController.getTerminateContainerWithoutSave(container_id)
+
 @instanceApp.route('/container/<string:container_id>/terminate/s')
 def terminateContainerWithSave(container_id):
     return docConfigController.getTerminateContainerWithSave(container_id)
