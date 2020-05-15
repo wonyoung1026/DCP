@@ -5,6 +5,7 @@ import os
 import requests
 import datetime
 import json
+
 # ===============================================================
 # Preregister provider VM
 # - Called when provider has only input IP address
@@ -118,7 +119,7 @@ def getPreregisterVM():
     # VM
     vm_id = virtualMachineModel.VirtualMachine(processor=scanned_spec.get("processor"), memory=scanned_spec.get("memory"), disk=scanned_spec.get("disk"), 
                                                  ipAddress= ip, providerID=provider.id, numberOfDisconnections=0,
-                                                 providerEmail=provider.email, isHidden=False, status=0,
+                                                 providerEmail=provider.email, isHidden=False, status=1,
                                                  name="", price=-1, expireTime=expire_time).save()
     vm = virtualMachineModel.VirtualMachine(id=vm_id)
     vm.reload()
@@ -148,18 +149,18 @@ def getPreregisterVM():
 def postRegisterVM():
     vm_id = request.get_json().get("preregisteredID")
     vm_price = request.get_json().get("vmPrice")
-    gpu = request.get_json().get("gpu")
+    gpu_dicts = request.get_json().get("gpu")
 
     provider = authController.getUserWithSessionCookie()
 
     vm = virtualMachineModel.VirtualMachine(id=vm_id)
     vm.reload()
     
+    if not vm_price:
+        return {"message": 'Virtual machine price has to be set', "status": 403}
     if not vm:
         return {"message": 'Virtual machine not found', "status": 404}
     
-    if not vm_price:
-        return {"message": 'Virtual machine price has to be set', "status": 403}
     
     if provider.id != vm.providerID:
         return {"message": 'Not authorized', "status": 401}
@@ -171,44 +172,71 @@ def postRegisterVM():
     instance_manager_path = "remote/provider/init"
     instance_manager_data = json.dumps({"providerEndpoint":str(vm.ipAddress), "vmID":str(vm.id)})
     instance_manager_url = "{}:{}/{}".format(os.getenv("INSTANCE_MANAGER_APP_DOMAIN"), os.getenv("INSTANCE_MANAGER_APP_PORT"), instance_manager_path)
-    instance_manager_response = requests.get(instance_manager_url, data=instance_manager_data, headers={"content-type":"application/json"})
     
-    try:
-        instance_manager_response_json = json.loads(instance_manager_response.text)
-    except:
-        return {'message': instance_manager_response.text, 'status': instance_manager_response.status_code}
+    # Synchronous. Faulty due to browser timeout
+    # instance_manager_response = requests.get(instance_manager_url, data=instance_manager_data, headers={"content-type":"application/json"})
+    # print("RESPONSE")
+    # print(instance_manager_response.text)
+    # try:
+    #     instance_manager_response_json = json.loads(instance_manager_response.text)
+    # except:
+    #     vm.remove()
+    #     return {'message': instance_manager_response.text, 'status': instance_manager_response.status_code}
     
-    if not instance_manager_response:
-        return {'message': instance_manager_response_json.get("message"), 'status': instance_manager_response.status_code}
+    # if not instance_manager_response:
+    #     vm.remove()
+    #     return {'message': instance_manager_response_json.get("message"), 'status': instance_manager_response.status_code}
+
 
     # ---------------------------------------------------------------
-    # 1. Update VM attributes with user input (e.g. price)
-    # 2. Remove expire time set during preregister
-    # 3. Repeat the steps for GPUs
+    # Async callback
     # ---------------------------------------------------------------
+    def callback(res):
+        try:
+            instance_manager_response_json = json.loads(res.text)
+        except:
+            vm.remove()
+            return {'message': res.text, 'status': res.status_code}
+
+        if not res:
+            vm.remove()
+            return {'message': res.text, 'status': res.status_code}
+        
+        # ---------------------------------------------------------------
+        # 1. Update vm status
+        # 2. Update GPU price
+        # ---------------------------------------------------------------
+        vm.status = 0
+
+        # Update GPU price
+        for gpu_dict in gpu_dicts:
+            print(gpu_dict)
+            gpu = gpuModel.GPU(id=gpu_dict.get("id"))
+            gpu.reload()
+            if not gpu:
+                continue
+                # return {"message": 'GPU not found', "status": 404}
+            
+            if gpu_dict.get("price"):
+                gpu.price = int(gpu_dict.get("price"))
+            else:
+                continue
+                # return {"message": 'GPU price has to be set', "status": 403}
+
+            gpu.expireTime = None
+            gpu.save()
+        
+        # Update VM if all GPU have been properly updated
+        vm.save()
+        return
+
+    helper.async_request('get', instance_manager_url, callback=callback, timeout=1000, data=instance_manager_data, headers={"content-type":"application/json"})
+
     vm.price = int(vm_price)
     vm.providerEmail = provider.email
     vm.expireTime = None
 
-
-    # Update GPU price
-    for gpu_dict in gpu:
-        gpu = gpuModel.GPU(id=gpu_dict.get("id"))
-        gpu.reload()
-        if not gpu:
-            return {"message": 'GPU not found', "status": 404}
-        
-        if gpu_dict.get("price"):
-            gpu.price = int(gpu_dict.get("price"))
-        else:
-            return {"message": 'GPU price has to be set', "status": 403}
-
-        gpu.expireTime = None
-        gpu.save()
-    
-    # Update VM only if all GPU have been properly updated
     vm.save()
-    
     return {'output': vm, 'message': "Virtual machine has been registered.", "status":201}
 
     

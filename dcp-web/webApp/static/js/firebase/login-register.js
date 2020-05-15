@@ -13,7 +13,7 @@ function buyerSignIn(email, password){
                 auth.currentUser.getIdToken().then(idToken =>{
                     // csrf Token to be configured later 
                     const csrfToken = getCookie('csrfToken')
-                    alert(idToken)
+                    console.log(idToken)
                     // postIdTokenToSessionLogin('/session-login', idToken, csrfToken);
                     data = JSON.stringify({'idToken': idToken, 'csrfToken': csrfToken})
                     var http = new XMLHttpRequest();
@@ -26,7 +26,7 @@ function buyerSignIn(email, password){
                     }
                     http.send(data);
                 }).then(()=>{
-                    window.location="/console/buyer"
+                    window.location="/console/buyer/dashboard"
                 })
             } else{
                 alert('wrong credentials');
@@ -51,7 +51,7 @@ function providerSignIn(email, password){
                 auth.currentUser.getIdToken().then(idToken =>{
                     // csrf Token to be configured later 
                     const csrfToken = getCookie('csrfToken')
-                    alert(idToken)
+                    console.log(idToken)
                     // postIdTokenToSessionLogin('/session-login', idToken, csrfToken);
                     var data = JSON.stringify({'idToken': idToken, 'csrfToken': csrfToken})
                     var http = new XMLHttpRequest();
@@ -65,7 +65,7 @@ function providerSignIn(email, password){
                     http.send(data);
                     
                 }).then(()=>{
-                    window.location= "/console/provider"
+                    window.location= "/console/provider/dashboard"
                 })
                 
             } else{
@@ -89,7 +89,7 @@ function getCookie(name) {
 // buyerFlag : false -> provider
 // ------------------------------------------------
 function signUp(email, password, buyerFlag){  
-    alert(email)
+    console.log(email)
     
     var data = JSON.stringify({'email': email, 'buyerFlag':buyerFlag})
     var http = new XMLHttpRequest();

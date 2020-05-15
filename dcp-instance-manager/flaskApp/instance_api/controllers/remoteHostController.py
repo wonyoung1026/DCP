@@ -70,7 +70,6 @@ def getProviderInitSetup():
     except subprocess.CalledProcessError as error:
         return make_response(jsonify({"error": error, "message":"Error while creating tunnel container"}),500)
 
-
     return make_response(jsonify({"message":"Init setup successful", "output": ssh_output}),200)
 
 

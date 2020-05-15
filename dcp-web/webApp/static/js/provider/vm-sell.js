@@ -99,15 +99,18 @@ function sellVM(){
       if(this.readyState==4){
         // Status : success
         if(this.status== 201){
-            alert(JSON.parse(this.response).message)
+            message = JSON.parse(this.response).message
+            document.getElementById("sell-vm-modal-body").innerHTML = message;
+            document.getElementById("sell-vm-modal-body").style.color = "blue";
             location.replace("/console/provider/dashboard")
           
-        } else{
+        } 
+        else{
         // Status : fail
-        document.getElementById("sell-vm-modal-body").innerHTML = "Failed";
-        document.getElementById("sell-vm-modal-body").style.color = "red";
+            document.getElementById("sell-vm-modal-body").innerHTML = "Failed";
+            document.getElementById("sell-vm-modal-body").style.color = "red";
+            console.log(this.responseText)
 
-          alert(JSON.parse(this.response).message)
         }
       } 
     }

@@ -81,3 +81,5 @@ def getBaseImages():
     status = res.get("status")
 
     return make_response(jsonify({'output': base_images, 'message':message}),status)
+
+
