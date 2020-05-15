@@ -172,20 +172,6 @@ def postRegisterVM():
     instance_manager_path = "remote/provider/init"
     instance_manager_data = json.dumps({"providerEndpoint":str(vm.ipAddress), "vmID":str(vm.id)})
     instance_manager_url = "{}:{}/{}".format(os.getenv("INSTANCE_MANAGER_APP_DOMAIN"), os.getenv("INSTANCE_MANAGER_APP_PORT"), instance_manager_path)
-    
-    # Synchronous. Faulty due to browser timeout
-    # instance_manager_response = requests.get(instance_manager_url, data=instance_manager_data, headers={"content-type":"application/json"})
-    # print("RESPONSE")
-    # print(instance_manager_response.text)
-    # try:
-    #     instance_manager_response_json = json.loads(instance_manager_response.text)
-    # except:
-    #     vm.remove()
-    #     return {'message': instance_manager_response.text, 'status': instance_manager_response.status_code}
-    
-    # if not instance_manager_response:
-    #     vm.remove()
-    #     return {'message': instance_manager_response_json.get("message"), 'status': instance_manager_response.status_code}
 
 
     # ---------------------------------------------------------------
